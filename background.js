@@ -1,10 +1,8 @@
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function getImagePageURLsFromGalleryPage(url) {
-  console.debug("pageurl", url);
+  //console.debug("pageurl", url);
   const res = await fetch(url);
-
   const html = await res.text();
 
   let parser = new DOMParser();
@@ -31,15 +29,22 @@ browser.browserAction.onClicked.addListener(async (tab) => {
             Array.from(document.querySelectorAll('table.ptt a[href]')).filter( (e) => {return !isNaN(parseInt(e.innerText)) }).slice(-1)[0].innerText;
         `,
   });
-  console.debug(tmp[0]);
+  //console.debug(tmp[0]);
 
   const max_page_nb = tmp[0];
 
-  //return;
   let url = new URL(tab.url);
-
   url.hash = "";
   url.search = "";
+
+  browser.browserAction.setTitle({
+    title: "Gathering image URLs",
+    tabId: tab.id,
+  });
+  browser.browserAction.setBadgeBackgroundColor({
+    color: "yellow",
+    tabId: tab.id,
+  });
 
   for (let i = 1; i <= max_page_nb; i++) {
     let page_url = url.toString() + "?p=" + i;
@@ -55,7 +60,7 @@ browser.browserAction.onClicked.addListener(async (tab) => {
       let img = await doc.querySelector("#img");
       let src = img.src;
 
-      console.debug(counter, src);
+      //console.debug(counter, src);
 
       const fetch_ret = await fetch(img.src);
       const ext = img.src.split(".").slice(-1);
@@ -63,9 +68,22 @@ browser.browserAction.onClicked.addListener(async (tab) => {
         binary: "uint8Array",
       });
       counter++;
+      browser.browserAction.setBadgeText({
+        text: "" + Math.floor((counter / (max_page_nb * 40)) * 100),
+        tabId: tab.id,
+      });
+      sleep(5000);
     }
-    sleep(5000);
   }
+
+  browser.browserAction.setTitle({
+    title: "Generating Archive",
+    tabId: tab.id,
+  });
+  browser.browserAction.setBadgeBackgroundColor({
+    color: "green",
+    tabId: tab.id,
+  });
 
   let blob = await zip.generateAsync({ type: "blob" }, (meta) => {
     browser.browserAction.setBadgeText({
