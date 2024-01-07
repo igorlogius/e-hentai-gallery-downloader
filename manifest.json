@@ -1,6 +1,6 @@
 {
   "author": "igorlogius",
-  "homepage_url": "https://github.com/igorlogius/ehentai-gallery-downloader",
+  "homepage_url": "https://github.com/igorlogius/e-hentai-gallery-downloader",
   "background": {
     "scripts": ["filesaver.js", "jszip.js", "background.js"]
   },
