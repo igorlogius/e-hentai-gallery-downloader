@@ -14,8 +14,8 @@ async function getImagePageURLsFromGalleryPage(url) {
   ).map((el) => {
     return el.getAttribute("href");
   });
-    //console.debug(url, ret);
-    return ret;
+  //console.debug(url, ret);
+  return ret;
 }
 
 browser.browserAction.onClicked.addListener(async (tab) => {
@@ -38,17 +38,9 @@ browser.browserAction.onClicked.addListener(async (tab) => {
   url.hash = "";
   url.search = "";
 
-  browser.browserAction.setTitle({
-    title: "Gathering image URLs",
-    tabId: tab.id,
-  });
-  browser.browserAction.setBadgeBackgroundColor({
-    color: "yellow",
-    tabId: tab.id,
-  });
+  await browser.browserAction.disable(tab.id);
 
-
-      let parser = new DOMParser();
+  let parser = new DOMParser();
 
   for (let i = 0; i < max_page_nb; i++) {
     let page_url = url.toString() + "?p=" + i;
@@ -76,7 +68,7 @@ browser.browserAction.onClicked.addListener(async (tab) => {
       });
       counter++;
       browser.browserAction.setBadgeText({
-        text: "" + Math.floor((counter / (max_page_nb * 40)) * 100),
+        text: "" + Math.floor((counter / (max_page_nb * 40) / 2) * 100),
         tabId: tab.id,
       });
 
@@ -84,23 +76,14 @@ browser.browserAction.onClicked.addListener(async (tab) => {
     }
   }
 
-  browser.browserAction.setTitle({
-    title: "Generating Archive",
-    tabId: tab.id,
-  });
-  browser.browserAction.setBadgeBackgroundColor({
-    color: "green",
-    tabId: tab.id,
-  });
-
   let blob = await zip.generateAsync({ type: "blob" }, (meta) => {
     browser.browserAction.setBadgeText({
-      text: "" + Math.floor(meta.percent),
+      text: "" + Math.floor(50 + meta.percent / 2),
       tabId: tab.id,
     });
   });
-  browser.browserAction.setBadgeText({
-    text: "",
+  await browser.browserAction.setBadgeText({
+    text: "✅",
     tabId: tab.id,
   });
   saveAs(blob, tab.title + ".cbz");
@@ -126,3 +109,5 @@ function handleUpdated(tabId, changeInfo, tabInfo) {
 browser.tabs.onUpdated.addListener(handleUpdated, filter);
 
 browser.browserAction.disable();
+
+browser.browserAction.setBadgeBackgroundColor({ color: "white" });
