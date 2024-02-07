@@ -9,12 +9,13 @@ async function getImagePageURLsFromGalleryPage(url) {
   let doc = parser.parseFromString(html, "text/html");
   let img = await doc.querySelector("#img");
 
-  return Array.from(
+  const ret = Array.from(
     doc.querySelectorAll('a[href^="https://e-hentai.org/s/"')
   ).map((el) => {
-    let url = el.getAttribute("href");
-    return url;
+    return el.getAttribute("href");
   });
+    //console.debug(url, ret);
+    return ret;
 }
 
 browser.browserAction.onClicked.addListener(async (tab) => {
@@ -31,7 +32,7 @@ browser.browserAction.onClicked.addListener(async (tab) => {
   });
   //console.debug(tmp[0]);
 
-  const max_page_nb = tmp[0];
+  const max_page_nb = parseInt(tmp[0]);
 
   let url = new URL(tab.url);
   url.hash = "";
@@ -46,21 +47,27 @@ browser.browserAction.onClicked.addListener(async (tab) => {
     tabId: tab.id,
   });
 
-  for (let i = 1; i <= max_page_nb; i++) {
+
+      let parser = new DOMParser();
+
+  for (let i = 0; i < max_page_nb; i++) {
     let page_url = url.toString() + "?p=" + i;
 
+    //console.debug('page_url', page_url);
+
     let urls = await getImagePageURLsFromGalleryPage(page_url);
+
+    //console.debug(JSON.stringify(urls,null,4));
 
     for (const url of urls) {
       const resp = await fetch(url);
       const html = await resp.text();
 
-      let parser = new DOMParser();
-      let doc = parser.parseFromString(html, "text/html");
+      let doc = await parser.parseFromString(html, "text/html");
       let img = await doc.querySelector("#img");
       let src = img.src;
 
-      //console.debug(counter, src);
+      console.debug(counter, src);
 
       const fetch_ret = await fetch(img.src);
       const ext = img.src.split(".").slice(-1);
@@ -72,7 +79,8 @@ browser.browserAction.onClicked.addListener(async (tab) => {
         text: "" + Math.floor((counter / (max_page_nb * 40)) * 100),
         tabId: tab.id,
       });
-      sleep(5000);
+
+      await sleep(1000);
     }
   }
 
