@@ -1,0 +1,12 @@
+{
+  "addons": {
+    "{d7c0fe4c-7207-4c03-9266-bb1831672f4e}": {
+      "updates": [
+        {
+          "version": "1.0.4",
+          "update_link": "https://github.com/igorlogius/e-hentai-gallery-downloader/releases/download/1.0.4/e-hentai-gallery-downloader-1.0.4.xpi"
+        },
+      ]
+    }
+  }
+}
