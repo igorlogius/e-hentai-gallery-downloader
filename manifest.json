@@ -1,6 +1,6 @@
 {
   "author": "igorlogius",
-  "homepage_url": "https://github.com/igorlogius/e-hentai-gallery-downloader",
+  "homepage_url": "https://github.com/igorlogius",
   "background": {
     "scripts": ["filesaver.js", "jszip.js", "background.js"]
   },
@@ -9,9 +9,9 @@
     "default_title": "Download Gallery"
   },
   "manifest_version": 2,
-  "name": "e-hentai Gallery Downloader",
+  "name": "e-hentai.org Gallery Downloader",
   "version": "1.0.3",
-  "description": "Download e-hentai gallery as a zip archive",
+  "description": "Download e-hentai.org galleries as zip archives",
   "icons": {
     "16": "icon.png"
   },
