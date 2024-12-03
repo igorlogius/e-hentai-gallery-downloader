@@ -1,7 +1,5 @@
 Download a e-hentai gallery as a cbz aka. zip archive
 
-[![](https://raw.githubusercontent.com/igorlogius/igorlogius/main/geFxAddon.png)](https://github.com/igorlogius/e-hentai-gallery-downloader/releases/latest)
-
 ### [Click here to report a bug, make a suggestion or ask a question](https://github.com/igorlogius/igorlogius/issues/new/choose)
 
 <b>Short Demo Video:</b>
